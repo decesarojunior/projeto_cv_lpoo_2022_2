@@ -58,6 +58,11 @@ public class Agenda implements Serializable {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
+    
+    
+    @ManyToOne
+    @JoinColumn(name = "cliente_pessoa_cpf", nullable = false)
+    private Cliente cliente;
         
     
     public Agenda(){
@@ -174,6 +179,20 @@ public class Agenda implements Serializable {
      */
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    /**
+     * @return the cliente
+     */
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    /**
+     * @param cliente the cliente to set
+     */
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
     
     
