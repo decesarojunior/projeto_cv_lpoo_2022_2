@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tb_funcionario")
-@DiscriminatorValue("F")
+@DiscriminatorValue("U")
 public class Funcionario extends Pessoa{
     
     
