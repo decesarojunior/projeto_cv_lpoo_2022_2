@@ -26,8 +26,8 @@ import javax.persistence.Table;
 public class Procedimento {
     
     @Id
-    @SequenceGenerator(name = "seq_agenda", sequenceName = "seq_agenda_id", allocationSize = 1)
-    @GeneratedValue(generator = "seq_agenda", strategy = GenerationType.SEQUENCE)  
+    @SequenceGenerator(name = "seq_procedimento", sequenceName = "seq_procedimento_id", allocationSize = 1)
+    @GeneratedValue(generator = "seq_procedimento", strategy = GenerationType.SEQUENCE)  
     private Integer id;
     
     @Column(nullable = false, length = 200)
