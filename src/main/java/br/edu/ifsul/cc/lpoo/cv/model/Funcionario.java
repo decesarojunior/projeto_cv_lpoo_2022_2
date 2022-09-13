@@ -9,9 +9,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 /**
- *
+ *  *gabrielle brambilla, *emmanuel scortegagna, jair.
  * @author telmo
  */
+
+
 
 @Entity
 @Table(name = "tb_funcionario")
