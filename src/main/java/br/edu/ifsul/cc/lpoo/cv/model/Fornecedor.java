@@ -3,6 +3,8 @@ package br.edu.ifsul.cc.lpoo.cv.model;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -13,6 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_fornecedor")
 @DiscriminatorValue("F")
+@NamedQueries({@NamedQuery(name="Fornecedor.orderbynome", query="select f from Fornecedor f order by f.nome asc")})
 public class Fornecedor extends Pessoa {
     
     @Column(nullable = false, length = 11)

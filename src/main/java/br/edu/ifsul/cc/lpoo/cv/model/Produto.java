@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -20,6 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tb_produto")
+@NamedQueries({@NamedQuery(name="Produto.orderbyid", query="select p from Produto p order by p.id asc")})
 public class Produto implements Serializable {
     
     @Id

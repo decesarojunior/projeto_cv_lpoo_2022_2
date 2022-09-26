@@ -4,7 +4,7 @@ package br.edu.ifsul.cc.lpoo.cv.test;
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
 import br.edu.ifsul.cc.lpoo.cv.model.Produto;
 import br.edu.ifsul.cc.lpoo.cv.model.TipoProduto;
-import br.edu.ifsul.cc.lpoo.cv.model.dao.PersistenciaJPA;
+import br.edu.ifsul.cc.lpoo.cv.model.dao.PersistenciaJDBC;
 import java.util.Calendar;
 import java.util.List;
 import org.junit.Test;
@@ -13,15 +13,15 @@ import org.junit.Test;
  *
  * @author telmo
  */
-public class TestPersistenciaJPA {
+public class TestPersistenciaJDBC {
     
-    //@Test
-    public void testConexaoJPA(){
-        //criar um objeto do tipo PersistenciaJPA.
-        PersistenciaJPA jpa = new PersistenciaJPA();
-        if(jpa.conexaoAberta()){
+        //@Test
+    public void testConexaoJPA() throws Exception {
+        //criar um objeto do tipo PersistenciaJDBC.
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
             System.out.println("conectou no BD via jpa ...");
-            jpa.fecharConexao();
+            jdbc.fecharConexao();
         }else{
             System.out.println("nao conectou no BD ...");
                         
@@ -31,18 +31,16 @@ public class TestPersistenciaJPA {
     //@Test
     public void testListProduto() throws Exception {
         //criar um objeto do tipo PersistenciaJPA.
-        PersistenciaJPA jpa = new PersistenciaJPA();
-        if(jpa.conexaoAberta()){
-            List<Produto> lista = jpa.listProdutos();
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            List<Produto> lista = jdbc.listProdutos();
             for(Produto p : lista){
                 
                 
                 System.out.println("Produto: "+ p);
-            }
+            }            
             
-            
-            
-            jpa.fecharConexao();
+            jdbc.fecharConexao();
         }else{
             System.out.println("nao conectou no BD ...");
                         
@@ -52,7 +50,7 @@ public class TestPersistenciaJPA {
     @Test
     public void testPersitenciaProduto() throws Exception {
         //criar um objeto do tipo PersistenciaJPA.
-        PersistenciaJPA jpa = new PersistenciaJPA();
+        PersistenciaJDBC jpa = new PersistenciaJDBC();
         if(jpa.conexaoAberta()){
             
             
@@ -88,7 +86,7 @@ public class TestPersistenciaJPA {
         }
     }
     
-    private Fornecedor getFornecedor( PersistenciaJPA jpa ) throws Exception {
+    private Fornecedor getFornecedor( PersistenciaJDBC jpa ) throws Exception {
         //criar um objeto do tipo PersistenciaJPA.     
         if(jpa.conexaoAberta()){
             
@@ -120,4 +118,5 @@ public class TestPersistenciaJPA {
         
         return null;
     }
+    
 }
