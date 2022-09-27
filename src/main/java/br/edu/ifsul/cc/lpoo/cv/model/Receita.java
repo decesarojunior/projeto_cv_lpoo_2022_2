@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,6 +23,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tb_receita")
+@NamedQueries({@NamedQuery(name="Receita.orderbyid", query="select r from Receita r order by r.id asc")})
 public class Receita implements Serializable {
     
     @Id

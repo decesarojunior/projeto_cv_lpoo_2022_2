@@ -2,7 +2,9 @@
 package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
+import br.edu.ifsul.cc.lpoo.cv.model.Procedimento;
 import br.edu.ifsul.cc.lpoo.cv.model.Produto;
+import br.edu.ifsul.cc.lpoo.cv.model.Receita;
 import br.edu.ifsul.cc.lpoo.cv.model.TipoProduto;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -107,6 +109,13 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             
             }
             
+        }else if (o instanceof Receita){
+            
+            
+        }else if (o instanceof Fornecedor){
+            
+        }else if (o instanceof Procedimento){
+            
         }
     }
 
@@ -121,6 +130,9 @@ public class PersistenciaJDBC implements InterfacePersistencia {
            ps.setInt(1, p.getId());
            
            ps.execute();
+           
+       }else if(o instanceof Fornecedor){
+           
            
        }
     }
@@ -188,6 +200,16 @@ public class PersistenciaJDBC implements InterfacePersistencia {
          }
          
          return lista;
+    }
+
+    @Override
+    public List<Receita> listReceitas() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Procedimento> listProcedimentos() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

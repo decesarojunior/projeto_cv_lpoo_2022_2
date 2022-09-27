@@ -3,6 +3,7 @@ package br.edu.ifsul.cc.lpoo.cv.test;
 
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
 import br.edu.ifsul.cc.lpoo.cv.model.Produto;
+import br.edu.ifsul.cc.lpoo.cv.model.Receita;
 import br.edu.ifsul.cc.lpoo.cv.model.TipoProduto;
 import br.edu.ifsul.cc.lpoo.cv.model.dao.PersistenciaJPA;
 import java.util.Calendar;
@@ -34,6 +35,7 @@ public class TestPersistenciaJPA {
         PersistenciaJPA jpa = new PersistenciaJPA();
         if(jpa.conexaoAberta()){
             List<Produto> lista = jpa.listProdutos();
+            System.out.println("testListProduto : "+ lista.size());
             for(Produto p : lista){
                 
                 
@@ -72,14 +74,48 @@ public class TestPersistenciaJPA {
             }else{
                 
                 for(Produto p : lista){
-                    jpa.remover(p);
+                    
+                    p.setNome(p.getNome()+" - nome alterado");
+                    jpa.persist(p);//altera o registro a partir do objeto gerenciado (p).
+                    
+                    jpa.remover(p);//remove o registro a partir do objeto gerenciado (p).
                 }
                 
                 System.out.println("Removeu todos os "+lista.size()+" produtos");
+            }                                   
+            
+            jpa.fecharConexao();
+        }else{
+            System.out.println("nao conectou no BD ...");
+                        
+        }
+    }
+    
+    @Test
+    public void testPersitenciaReceita() throws Exception {
+        //criar um objeto do tipo PersistenciaJPA.
+        PersistenciaJPA jpa = new PersistenciaJPA();
+        if(jpa.conexaoAberta()){
+            
+            List<Receita> lista = jpa.listReceitas();
+            if(lista.isEmpty()){
+            
+              //criar uma objeto do tipo Receita
+              //vincular dois Produtos na receita.
+                
+                
+            }else{
+                
+                for(Receita r : lista){
+                
+                    //listar os produtos da receita
+                    //remover os produtos da receita
+                    //remover a receita.
+                    jpa.remover(r);
+                }
+                
+                System.out.println("Removeu todas as "+lista.size()+" receitas");
             }
-            
-            
-            
             
             jpa.fecharConexao();
         }else{
