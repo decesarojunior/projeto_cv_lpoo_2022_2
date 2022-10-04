@@ -1,11 +1,15 @@
 
 package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
+import br.edu.ifsul.cc.lpoo.cv.model.Cliente;
 import br.edu.ifsul.cc.lpoo.cv.model.Consulta;
+import br.edu.ifsul.cc.lpoo.cv.model.Especie;
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
+import br.edu.ifsul.cc.lpoo.cv.model.Pet;
 import br.edu.ifsul.cc.lpoo.cv.model.Procedimento;
 import br.edu.ifsul.cc.lpoo.cv.model.Produto;
+import br.edu.ifsul.cc.lpoo.cv.model.Raca;
 import br.edu.ifsul.cc.lpoo.cv.model.Receita;
 import br.edu.ifsul.cc.lpoo.cv.model.TipoProduto;
 import java.sql.Connection;
@@ -180,17 +184,162 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         
                     }                                        
                     
-                }
-                
+                }               
                 
             }
             
+        }else if (o instanceof Pet){
+            
+            Pet p = (Pet) o;
+            if(p.getId() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_pet (id, nome, data_nascimento, observacao, raca_id, cliente_cpf) "
+                                                               + "values (nextval('seq_pet_id'), ?, ?, ?, ?, ?) returning id;");
+                ps.setString(1, p.getNome());
+                ps.setDate(2, new java.sql.Date(p.getData_nascimento().getTimeInMillis()));
+                ps.setString(3, p.getObservacao());
+                ps.setInt(4, p.getRaca().getId());
+                ps.setString(5, p.getCliente().getCpf());
+                
+                
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    p.setId(rs.getInt("id"));
+                }
+                
+            } else {
+                
+                PreparedStatement ps = this.con.prepareStatement("update tb_pet set nome = ?, data_nascimento = ? "
+                                                               + "where id = ?; ");
+                
+                ps.setString(1, p.getNome());
+                ps.setDate(2, new java.sql.Date(p.getData_nascimento().getTimeInMillis()));
+                ps.setInt(3, p.getId());
+               
+                //..implementar os demais campos...
+                ps.execute();
+            
+            }
+            
+            
+        }else if (o instanceof Raca){
+            
+            Raca r = (Raca) o;
+            
+            if(r.getId() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_raca (id, nome, especie_id) "
+                                                               + "values (nextval('seq_raca_id'), ?, ?) returning id;");
+                ps.setString(1, r.getNome());
+                ps.setInt(2, r.getEspecie().getId());
+                
+                
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    r.setId(rs.getInt("id"));
+                }
+                
+            } else {
+                
+                //implementar a alteracao ...
+            
+            }
+            
+        }else if (o instanceof Especie){
+            
+            Especie e = (Especie) o;
+            
+            if(e.getId() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_especie (id, nome) "
+                                                               + "values (nextval('seq_especie_id'), ?) returning id;");
+                ps.setString(1, e.getNome());
+                
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    e.setId(rs.getInt("id"));
+                }
+                
+            } else {
+                
+                //implementar a alteracao ...
+            
+            }
+            
+         
         }else if (o instanceof Fornecedor){
-            
-            
             
         }else if (o instanceof Medico){
             
+            Medico m = (Medico) o;
+            
+            if(m.getData_cadastro() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_pessoa (tipo, cpf, rg, nome, senha, data_cadastro) "
+                                                               + "values ('M', ?, ?, ?, ?, ?); ");
+                ps.setString(1, m.getCpf());
+                ps.setString(2, m.getRg());
+                ps.setString(3, m.getNome());
+                ps.setString(4, m.getSenha());
+                ps.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                
+                ps.execute();
+                ps.close();
+                
+                ps = this.con.prepareStatement("insert into tb_medico (cpf, numero_crmv) "
+                                                               + "values (?, ?); ");
+                ps.setString(1, m.getCpf());
+                ps.setString(2, m.getNumero_crmv());
+                
+                ps.execute();
+                ps.close();
+                
+                System.out.println("inseriu o medico ...");
+                
+                
+                
+            } else {
+                
+                //implementar a alteracao ...
+            
+            }
+            
+            
+            
+        }else if (o instanceof Cliente){
+            
+            Cliente c = (Cliente) o;
+            
+            if(c.getData_cadastro() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_pessoa (tipo, cpf, rg, nome, senha, data_cadastro) "
+                                                               + "values ('C', ?, ?, ?, ?, ?); ");
+                ps.setString(1, c.getCpf());
+                ps.setString(2, c.getRg());
+                ps.setString(3, c.getNome());
+                ps.setString(4, c.getSenha());
+                ps.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                
+                ps.execute();
+                ps.close();
+                
+                ps = this.con.prepareStatement("insert into tb_cliente (cpf, data_ultima_visita) "
+                                                               + "values (?, ?); ");
+                ps.setString(1, c.getCpf());
+                ps.setDate(2, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                
+                ps.execute();
+                ps.close();
+                
+                System.out.println("inseriu o cliente ...");
+                
+                
+                
+            } else {
+                
+                //implementar a alteracao ...
+            
+            }
             
         }else if (o instanceof Procedimento){
             
@@ -199,21 +348,36 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             Consulta c = (Consulta) o;
             if(c.getId() == null){
                 
-                PreparedStatement ps = this.con.prepareStatement("insert into tb_consulta (id, data, data_retorno, observacao, valor, medico_cpf, pet_id) values "
-                                                               + " (nextval('seq_consulta_id'), ?,?,?) returning id ");
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_consulta (id, "
+                                                                                        + "data, "
+                                                                                        + "data_retorno, "
+                                                                                        + "observacao, "
+                                                                                        + "valor, "
+                                                                                        + "medico_cpf, "
+                                                                                        + "pet_id) values "
+                                                                                        + "( nextval('seq_consulta_id'), "
+                                                                                        + " ?,"
+                                                                                        + " ?,"
+                                                                                        + " ?,"
+                                                                                        + " ?,"
+                                                                                        + " ?,"
+                                                                                        + " ?) returning id ");
                 
                 ps.setDate(1, new java.sql.Date(c.getData().getTimeInMillis()));
                 ps.setDate(2, new java.sql.Date(c.getData_retorno().getTimeInMillis()));
                 ps.setString(3, c.getObservacao());
                 ps.setFloat(4, c.getValor());
-                ps.setString(4, c.getMedico().getCpf());
-                ps.setInt(5, c.getPet().getId());
+                ps.setString(5, c.getMedico().getCpf());
+                ps.setInt(6, c.getPet().getId());
                 
                 ResultSet rs = ps.executeQuery();
                 
                 if(rs.next()){
                     c.setId(rs.getInt("id"));
                 }
+                
+            }else{
+                
                 
             }
             
@@ -341,7 +505,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             r.setConsulta(c);
             
             PreparedStatement ps2 = this.con.prepareStatement("select p.id, p.nome "
-                                                        + " from tb_produto p, tb_receita_produto rp where p.id=rp.produto_id and rc.receita_id = ? order by r.id asc");
+                                                        + " from tb_produto p, tb_receita_produto rp where p.id=rp.produto_id and rp.receita_id = ? order by rp.produto_id asc");
             
             ps2.setInt(1, r.getId());
             
@@ -350,8 +514,8 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             while(rs2.next()){
                 
                 Produto p = new Produto();
-                p.setId(rs.getInt("id"));
-                p.setNome(rs.getString("nome"));
+                p.setId(rs2.getInt("id"));
+                p.setNome(rs2.getString("nome"));
                 
                 r.setProduto(p);
             }
@@ -413,7 +577,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         List<Medico> lista;
         
         PreparedStatement ps = this.con.prepareStatement(" select p.cpf, p.nome "
-                                                        + " from tb_pessoa p, tb_medico f where p.cpf=m.cpf order by p.cpf asc");
+                                                        + " from tb_pessoa p, tb_medico m where p.cpf=m.cpf order by p.cpf asc");
          
         ResultSet rs = ps.executeQuery();
          
@@ -426,6 +590,103 @@ public class PersistenciaJDBC implements InterfacePersistencia {
              m.setNome(rs.getString("nome"));
              
              lista.add(m);
+             
+        }
+         
+        return lista;
+    }
+
+    @Override
+    public List<Pet> listPets() throws Exception {
+        
+        List<Pet> lista;
+        
+        PreparedStatement ps = this.con.prepareStatement(" select p.id "
+                                                        + " from tb_pet p order by p.id asc");
+         
+        ResultSet rs = ps.executeQuery();
+         
+        lista = new ArrayList();
+         
+        while(rs.next()){
+             
+             Pet p = new Pet();
+             p.setId(rs.getInt("id"));
+             
+             lista.add(p);
+             
+        }
+         
+        return lista;
+    }
+
+    @Override
+    public List<Raca> listRacas() throws Exception {
+        
+        List<Raca> lista;
+        
+        PreparedStatement ps = this.con.prepareStatement(" select r.id "
+                                                        + " from tb_raca r order by r.id asc");
+         
+        ResultSet rs = ps.executeQuery();
+         
+        lista = new ArrayList();
+         
+        while(rs.next()){
+             
+             Raca r = new Raca();
+             r.setId(rs.getInt("id"));
+             
+             lista.add(r);
+             
+        }
+         
+        return lista;
+    }
+    
+    @Override
+    public List<Especie> listEspecies() throws Exception {
+        
+        List<Especie> lista;
+        
+        PreparedStatement ps = this.con.prepareStatement(" select e.id "
+                                                        + " from tb_especie e order by e.id asc");
+         
+        ResultSet rs = ps.executeQuery();
+         
+        lista = new ArrayList();
+         
+        while(rs.next()){
+             
+             Especie e = new Especie();
+             e.setId(rs.getInt("id"));
+             
+             lista.add(e);
+             
+        }
+         
+        return lista;
+    }
+
+    @Override
+    public List<Cliente> listClientes() throws Exception {
+        
+        List<Cliente> lista;
+        
+        PreparedStatement ps = this.con.prepareStatement(" select p.cpf, p.nome "
+                                                        + " from tb_pessoa p, tb_cliente c where p.cpf=c.cpf order by p.cpf asc");
+         
+        ResultSet rs = ps.executeQuery();
+         
+        lista = new ArrayList();
+         
+        while(rs.next()){
+             
+             Cliente c = new Cliente();
+             c.setCpf(rs.getString("cpf"));
+             c.setNome(rs.getString("nome"));
+             
+             lista.add(c);
              
         }
          

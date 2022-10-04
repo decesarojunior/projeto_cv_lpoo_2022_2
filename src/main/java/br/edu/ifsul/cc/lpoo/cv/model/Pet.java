@@ -120,6 +120,20 @@ public class Pet implements Serializable {
     public void setRaca(Raca raca) {
         this.raca = raca;
     }
+
+    /**
+     * @return the cliente
+     */
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    /**
+     * @param cliente the cliente to set
+     */
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
     
     
     
