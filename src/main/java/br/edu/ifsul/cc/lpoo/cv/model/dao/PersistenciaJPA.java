@@ -1,7 +1,9 @@
     
 package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
+import br.edu.ifsul.cc.lpoo.cv.model.Consulta;
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
+import br.edu.ifsul.cc.lpoo.cv.model.Medico;
 import br.edu.ifsul.cc.lpoo.cv.model.Procedimento;
 import br.edu.ifsul.cc.lpoo.cv.model.Produto;
 import br.edu.ifsul.cc.lpoo.cv.model.Receita;
@@ -82,6 +84,16 @@ public class PersistenciaJPA implements InterfacePersistencia {
 
     @Override
     public List<Procedimento> listProcedimentos() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Medico> listMedicos() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Consulta> listConsultas() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     

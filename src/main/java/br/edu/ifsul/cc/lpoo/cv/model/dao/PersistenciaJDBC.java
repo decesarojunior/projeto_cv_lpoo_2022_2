@@ -1,7 +1,9 @@
 
 package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
+import br.edu.ifsul.cc.lpoo.cv.model.Consulta;
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
+import br.edu.ifsul.cc.lpoo.cv.model.Medico;
 import br.edu.ifsul.cc.lpoo.cv.model.Procedimento;
 import br.edu.ifsul.cc.lpoo.cv.model.Produto;
 import br.edu.ifsul.cc.lpoo.cv.model.Receita;
@@ -12,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -112,9 +115,108 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         }else if (o instanceof Receita){
             
             
+            Receita r = (Receita) o;
+            if(r.getId() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_receita (id, orientacao, consulta_id) "
+                                                               + "values (nextval('seq_receita_id'), ?, ?) returning id;");
+                ps.setString(1, r.getOrientacao());
+                ps.setInt(2,  r.getConsulta().getId());
+                
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    r.setId(rs.getInt("id"));
+                }
+              
+                if(r.getProdutos() != null && !r.getProdutos().isEmpty()){
+                    
+                    for(Produto p : r.getProdutos()){
+                        
+                        PreparedStatement ps2 = this.con.prepareStatement("insert into tb_receita_produto (receita_id, produto_id) "
+                                                               + "values (?, ?) ");
+               
+                        ps2.setInt(1,  r.getId());
+                        ps2.setInt(2,  p.getId());
+                        
+                        ps2.execute();
+                        
+                        ps2.close();
+                        
+                    }                                        
+                    
+                }
+                rs.close();
+                ps.close();
+                
+            }else{
+               
+                PreparedStatement ps = this.con.prepareStatement("update tb_receita set orientacao = ?, consulta_id = ? "
+                                                               + "where id = ?");
+                ps.setString(1, r.getOrientacao());
+                ps.setInt(2,  r.getConsulta().getId());
+                ps.setInt(3, r.getId());
+                
+                ps.execute();
+                        
+                //remove as linhas na tabela associativa.
+                PreparedStatement ps2 = this.con.prepareStatement("delete from tb_receita_produto where receita_id = ?");
+                ps2.setInt(1, r.getId());
+                
+                ps2.execute();
+                
+                if(r.getProdutos() != null && !r.getProdutos().isEmpty()){
+                    
+                    for(Produto p : r.getProdutos()){
+                        
+                        PreparedStatement ps3 = this.con.prepareStatement("insert into tb_receita_produto (receita_id, produto_id) "
+                                                               + "values (?, ?) ");
+               
+                        ps3.setInt(1,  r.getId());
+                        ps3.setInt(2,  p.getId());
+                        
+                        ps3.execute();
+                        
+                        ps3.close();
+                        
+                    }                                        
+                    
+                }
+                
+                
+            }
+            
         }else if (o instanceof Fornecedor){
             
+            
+            
+        }else if (o instanceof Medico){
+            
+            
         }else if (o instanceof Procedimento){
+            
+        }else if (o instanceof Consulta){
+            
+            Consulta c = (Consulta) o;
+            if(c.getId() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_consulta (id, data, data_retorno, observacao, valor, medico_cpf, pet_id) values "
+                                                               + " (nextval('seq_consulta_id'), ?,?,?) returning id ");
+                
+                ps.setDate(1, new java.sql.Date(c.getData().getTimeInMillis()));
+                ps.setDate(2, new java.sql.Date(c.getData_retorno().getTimeInMillis()));
+                ps.setString(3, c.getObservacao());
+                ps.setFloat(4, c.getValor());
+                ps.setString(4, c.getMedico().getCpf());
+                ps.setInt(5, c.getPet().getId());
+                
+                ResultSet rs = ps.executeQuery();
+                
+                if(rs.next()){
+                    c.setId(rs.getInt("id"));
+                }
+                
+            }
+            
             
         }
     }
@@ -133,6 +235,21 @@ public class PersistenciaJDBC implements InterfacePersistencia {
            
        }else if(o instanceof Fornecedor){
            
+           
+       }else if(o instanceof Receita){
+           
+           
+            Receita r = (Receita) o;
+            
+            //remove as linhas na tabela associativa.
+            PreparedStatement ps2 = this.con.prepareStatement("delete from tb_receita_produto where receita_id = ?");
+            ps2.setInt(1, r.getId());
+            ps2.execute();
+                    
+            //remove as linhas na tabela.
+            PreparedStatement ps3 = this.con.prepareStatement("delete from tb_receita where id = ?");
+            ps3.setInt(1, r.getId());
+            ps3.execute();
            
        }
     }
@@ -204,12 +321,115 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
     @Override
     public List<Receita> listReceitas() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        List<Receita> lista = null;
+        
+        PreparedStatement ps = this.con.prepareStatement(" select r.id, r.orientacao, r.consulta_id "
+                                                        + " from tb_receita r, tb_consulta c where r.consulta_id=c.id order by r.id asc");
+         
+        ResultSet rs = ps.executeQuery();
+         
+        lista = new ArrayList();
+         
+        while(rs.next()){
+             
+            Receita r = new Receita();
+            r.setId(rs.getInt("id"));
+            r.setOrientacao(rs.getString("orientacao"));
+            Consulta c = new Consulta();
+            c.setId(rs.getInt("consulta_id"));
+            r.setConsulta(c);
+            
+            PreparedStatement ps2 = this.con.prepareStatement("select p.id, p.nome "
+                                                        + " from tb_produto p, tb_receita_produto rp where p.id=rp.produto_id and rc.receita_id = ? order by r.id asc");
+            
+            ps2.setInt(1, r.getId());
+            
+            ResultSet rs2 = ps2.executeQuery();
+            
+            while(rs2.next()){
+                
+                Produto p = new Produto();
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                
+                r.setProduto(p);
+            }
+            rs2.close();
+            ps2.close();
+            
+            lista.add(r);
+             
+        }
+         
+        rs.close();
+        ps.close();
+        
+        return lista;
+        
+        
     }
 
     @Override
     public List<Procedimento> listProcedimentos() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Consulta> listConsultas() throws Exception {
+        
+        List<Consulta> lista;
+        
+        PreparedStatement ps = this.con.prepareStatement(" select c.id, c.data, c.data_retorno, c.observacao, c.valor, c.medico_cpf, c.pet_id "
+                                                       + " from tb_consulta c order by c.id asc");
+         
+        ResultSet rs = ps.executeQuery();
+         
+        lista = new ArrayList();
+         
+        while(rs.next()){
+             
+             Consulta c = new Consulta();
+             c.setId(rs.getInt("id"));
+             Calendar cData = Calendar.getInstance();
+             cData.setTimeInMillis(rs.getDate("data").getTime());
+             c.setData(cData);
+             
+             //... recuperar os demais campos.
+             
+             //... recuperar as receitas da consulta
+             
+             
+             lista.add(c);
+             
+        }
+         
+        return lista;
+    }
+
+    @Override
+    public List<Medico> listMedicos() throws Exception {
+        
+        List<Medico> lista;
+        
+        PreparedStatement ps = this.con.prepareStatement(" select p.cpf, p.nome "
+                                                        + " from tb_pessoa p, tb_medico f where p.cpf=m.cpf order by p.cpf asc");
+         
+        ResultSet rs = ps.executeQuery();
+         
+        lista = new ArrayList();
+         
+        while(rs.next()){
+             
+             Medico m = new Medico();
+             m.setCpf(rs.getString("cpf"));
+             m.setNome(rs.getString("nome"));
+             
+             lista.add(m);
+             
+        }
+         
+        return lista;
     }
     
 }

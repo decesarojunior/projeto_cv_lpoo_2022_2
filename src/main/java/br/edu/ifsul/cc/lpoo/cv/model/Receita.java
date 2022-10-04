@@ -2,6 +2,7 @@
 package br.edu.ifsul.cc.lpoo.cv.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -103,6 +104,13 @@ public class Receita implements Serializable {
         this.produtos = produtos;
     }
     
+    
+    public void setProduto(Produto produto) {
+        
+        if(this.produtos == null)
+            this.produtos = new ArrayList();
+        this.produtos.add(produto);
+    }
     
     
 }
