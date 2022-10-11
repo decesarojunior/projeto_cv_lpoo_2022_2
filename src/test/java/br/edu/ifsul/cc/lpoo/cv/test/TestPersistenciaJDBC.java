@@ -24,7 +24,7 @@ public class TestPersistenciaJDBC {
     
     public void testPersistenciaConsulta() throws Exception {
         
-        //Avaliação 11/10/2022 - Questão 4 - teste circular em tb_consulta, tb_receita e tb_receita_produto
+        //Avaliação 11/10/2022 - Questão 3 - teste circular em tb_consulta, tb_receita e tb_receita_produto
     }
     
     //@Test

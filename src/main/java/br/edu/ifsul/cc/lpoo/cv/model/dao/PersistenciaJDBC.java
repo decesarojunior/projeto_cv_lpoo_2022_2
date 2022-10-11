@@ -422,7 +422,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
            
        }else if (o instanceof Consulta){
            
-           //Avaliação 11/10/2022 - Questão 3 - delete em tb_consulta
+           //Avaliação 11/10/2022 - Questão 3.a - delete em tb_consulta
            
        }
     }
