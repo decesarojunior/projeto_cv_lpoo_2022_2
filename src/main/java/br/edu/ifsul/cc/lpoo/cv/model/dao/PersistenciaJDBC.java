@@ -269,6 +269,8 @@ public class PersistenciaJDBC implements InterfacePersistencia {
          
         }else if (o instanceof Fornecedor){
             
+            
+            
         }else if (o instanceof Medico){
             
             Medico m = (Medico) o;
@@ -345,6 +347,8 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             
         }else if (o instanceof Consulta){
             
+            
+            
             Consulta c = (Consulta) o;
             if(c.getId() == null){
                 
@@ -378,6 +382,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 
             }else{
                 
+                //Avaliação 11/10/2022 - Questão 2 - update em tb_consulta.
                 
             }
             
@@ -414,6 +419,10 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             PreparedStatement ps3 = this.con.prepareStatement("delete from tb_receita where id = ?");
             ps3.setInt(1, r.getId());
             ps3.execute();
+           
+       }else if (o instanceof Consulta){
+           
+           //Avaliação 11/10/2022 - Questão 3 - delete em tb_consulta
            
        }
     }
@@ -559,9 +568,13 @@ public class PersistenciaJDBC implements InterfacePersistencia {
              cData.setTimeInMillis(rs.getDate("data").getTime());
              c.setData(cData);
              
-             //... recuperar os demais campos.
+             //Avaliação 11/10/2022 - Questão 1
              
-             //... recuperar as receitas da consulta
+             //... recuperar os demais campos do resultset.
+             
+             //... recuperar as receitas da consulta.
+             
+             //... recuperar os produtos da receita.
              
              
              lista.add(c);
