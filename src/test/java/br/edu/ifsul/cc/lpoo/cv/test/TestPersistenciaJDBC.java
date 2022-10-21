@@ -12,6 +12,7 @@ import br.edu.ifsul.cc.lpoo.cv.model.Raca;
 import br.edu.ifsul.cc.lpoo.cv.model.Receita;
 import br.edu.ifsul.cc.lpoo.cv.model.TipoProduto;
 import br.edu.ifsul.cc.lpoo.cv.model.dao.PersistenciaJDBC;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import org.junit.Test;
@@ -22,9 +23,92 @@ import org.junit.Test;
  */
 public class TestPersistenciaJDBC {
     
+    @Test
     public void testPersistenciaConsulta() throws Exception {
         
         //Avaliação 11/10/2022 - Questão 3 - teste circular em tb_consulta, tb_receita e tb_receita_produto
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            System.out.println("conectou no BD via jpa ...");
+            
+            List<Consulta> listConsultas = jdbc.listConsultas();
+            
+            if(listConsultas.isEmpty()){
+                
+                System.out.println("lista de consulta vazia, inserir nova consulta ...");
+                
+                Consulta c = new Consulta();
+                c.setData(Calendar.getInstance());
+                c.setData_retorno(Calendar.getInstance());
+                c.setObservacao("nada consta.");
+                c.setValor(0f);
+                c.setMedico(getMedico(jdbc));
+                c.setPet(getPet(jdbc));
+                
+                jdbc.persist(c);//insert na tb_consulta.
+                
+                System.out.println("\t cadastrou a consulta: "+c.getId());
+                
+                Receita r = new Receita();
+                r.setConsulta(c);
+                r.setOrientacao("sem orientacao");
+                
+                jdbc.persist(r);//insert na tb_receita.
+                
+                Produto p = new Produto();
+                p.setFornecedor(getFornecedor(jdbc));
+                p.setNome("produto de teste");
+                p.setQuantidade(0f);
+                p.setTipo(TipoProduto.CONSULTA);
+                p.setValor(0f);
+                
+                jdbc.persist(p);//insert em tb_produto
+                
+                r.setProduto(p);//adiciona o produto na receita.
+                
+                jdbc.persist(r);//insert em tb_receita_produto
+                
+            }else{
+                
+                for(Consulta c : listConsultas){
+                    
+                    System.out.println("Consulta id: "+c.getId());
+                    
+                    Calendar dt = Calendar.getInstance();
+                    dt.set(Calendar.DAY_OF_MONTH, 26);//26 - dia do mês.
+                    dt.set(Calendar.MONTH, 9);//9 - outubro.
+                    dt.set(Calendar.YEAR, 2022);
+                    c.setData_retorno(dt);
+                    
+                    jdbc.persist(c);//update em tb_consulta.
+                    
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    System.out.println("\tConsulta alterada data retorno: "+sdf.format(c.getData_retorno().getTime()));
+                    
+                    for(Receita r : c.getReceitas()){
+                        
+                        System.out.println("\t Receita id: "+r.getId());
+                        
+                        for(Produto p : r.getProdutos()){
+                            
+                            System.out.println("\t\t Produto id: "+p.getId());
+                        }
+                        
+                        jdbc.remover(r);//removendo a receita e seus respectivos produtos.
+                    }
+                    
+                    jdbc.remover(c);//removendo a consulta
+                }
+            }
+            
+            jdbc.fecharConexao();
+        }else{
+            System.out.println("nao conectou no BD ...");
+                        
+        }
+        
+        
+        //----------------------------------------------------------------------
     }
     
     //@Test

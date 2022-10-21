@@ -347,8 +347,6 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             
         }else if (o instanceof Consulta){
             
-            
-            
             Consulta c = (Consulta) o;
             if(c.getId() == null){
                 
@@ -383,6 +381,28 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             }else{
                 
                 //Avaliação 11/10/2022 - Questão 2 - update em tb_consulta.
+                
+                PreparedStatement ps = this.con.prepareStatement("update tb_consulta  set "
+                                                                                        + "data = ?, "
+                                                                                        + "data_retorno = ?, "
+                                                                                        + "observacao = ?, "
+                                                                                        + "valor = ?, "
+                                                                                        + "medico_cpf = ?, "
+                                                                                        + "pet_id = ? "
+                                                                                        + "where "
+                                                                                        + "id = ?"
+                                                                );
+                
+                ps.setDate(1, new java.sql.Date(c.getData().getTimeInMillis()));
+                ps.setDate(2, new java.sql.Date(c.getData_retorno().getTimeInMillis()));
+                ps.setString(3, c.getObservacao());
+                ps.setFloat(4, c.getValor());
+                ps.setString(5, c.getMedico().getCpf());
+                ps.setInt(6, c.getPet().getId());
+                ps.setInt(7, c.getId());
+                
+                ps.execute();
+                //--------------------------------------------------------------
                 
             }
             
@@ -422,7 +442,14 @@ public class PersistenciaJDBC implements InterfacePersistencia {
            
        }else if (o instanceof Consulta){
            
-           //Avaliação 11/10/2022 - Questão 3.a - delete em tb_consulta
+           //Avaliação 11/10/2022 - Questão 3.c - delete em tb_consulta
+           
+            Consulta c = (Consulta) o;
+           
+            PreparedStatement ps3 = this.con.prepareStatement("delete from tb_consulta where id = ?");
+            ps3.setInt(1, c.getId());
+            ps3.execute();
+           //-------------------------------------------------------------------
            
        }
     }
@@ -553,7 +580,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         
         List<Consulta> lista;
         
-        PreparedStatement ps = this.con.prepareStatement(" select c.id, c.data, c.data_retorno, c.observacao, c.valor, c.medico_cpf, c.pet_id "
+        PreparedStatement ps = this.con.prepareStatement("select c.id, c.data, c.data_retorno, c.observacao, c.valor, c.medico_cpf, c.pet_id "
                                                        + " from tb_consulta c order by c.id asc");
          
         ResultSet rs = ps.executeQuery();
@@ -568,14 +595,64 @@ public class PersistenciaJDBC implements InterfacePersistencia {
              cData.setTimeInMillis(rs.getDate("data").getTime());
              c.setData(cData);
              
-             //Avaliação 11/10/2022 - Questão 1
+             //Avaliação 11/10/2022 - Questão 1---------------------------------------------------------
              
-             //... recuperar os demais campos do resultset.
+             //... recuperar os demais campos do resultset: data_retorno, observacao, valor, medico_cpf, pet_id
              
-             //... recuperar as receitas da consulta.
+             cData = Calendar.getInstance();
+             cData.setTimeInMillis(rs.getDate("data_retorno").getTime());
+             c.setData_retorno(cData);
              
-             //... recuperar os produtos da receita.
+             c.setObservacao(rs.getString("observacao"));
+             c.setValor(rs.getFloat("valor"));
              
+             Medico m = new Medico();
+             m.setCpf(rs.getString("medico_cpf"));
+             c.setMedico(m);
+             
+             Pet p = new Pet();
+             p.setId(rs.getInt("pet_id"));             
+             c.setPet(p);
+             
+             //... recuperar as receitas da consulta: id, orientacao e consulta_id
+             
+             PreparedStatement ps2 = this.con.prepareStatement("select r.id, r.orientacao, r.consulta_id from tb_receita r where r.consulta_id = ? order by r.id asc");
+             ps2.setInt(1, c.getId());
+             
+             ResultSet rs2 = ps2.executeQuery();
+             List<Receita> receitas = new ArrayList();
+             
+             while(rs2.next()){
+                 
+                Receita r = new Receita();
+                r.setId(rs2.getInt("id"));
+                r.setOrientacao(rs2.getString("orientacao"));
+                r.setConsulta(c);
+                 
+                //... recuperar os produtos da receita: produto_id
+                
+                PreparedStatement ps3 = this.con.prepareStatement("select rp.receita_id, rp.produto_id from tb_receita_produto rp where rp.receita_id = ? order by rp.produto_id asc");
+                ps3.setInt(1, r.getId());
+             
+                ResultSet rs3 = ps3.executeQuery();
+                List<Produto> produtos = new ArrayList();
+                
+                while(rs3.next()){
+                    
+                    Produto pdt = new Produto();
+                    pdt.setId(rs3.getInt("produto_id"));
+                    
+                    produtos.add(pdt);
+                }
+                
+                r.setProdutos(produtos);
+                
+                receitas.add(r);
+                 
+             }
+             c.setReceitas(receitas);
+             
+             //------------------------------------------------------------------------------------------
              
              lista.add(c);
              
