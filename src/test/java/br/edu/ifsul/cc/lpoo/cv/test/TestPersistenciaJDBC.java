@@ -261,7 +261,7 @@ public class TestPersistenciaJDBC {
                 f.setNome("teste");
                 f.setCnpj("08316535000");
                 f.setIe("");
-                f.setData_cadastro(Calendar.getInstance());
+                
                 f.setNome("Laboratório Santa Inês");
                 f.setRg("123");
                 f.setSenha("123");

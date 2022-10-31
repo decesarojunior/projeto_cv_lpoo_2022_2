@@ -5,6 +5,7 @@ import br.edu.ifsul.cc.lpoo.cv.model.Cliente;
 import br.edu.ifsul.cc.lpoo.cv.model.Consulta;
 import br.edu.ifsul.cc.lpoo.cv.model.Especie;
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
+import br.edu.ifsul.cc.lpoo.cv.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
 import br.edu.ifsul.cc.lpoo.cv.model.Pet;
 import br.edu.ifsul.cc.lpoo.cv.model.Procedimento;
@@ -36,4 +37,6 @@ public interface InterfacePersistencia {
     public List<Raca> listRacas() throws Exception;
     public List<Especie> listEspecies() throws Exception;
     public List<Cliente> listClientes() throws Exception;
+    
+    //public Funcionario doLogin(String cpf, String senha) throws Exception;
 }

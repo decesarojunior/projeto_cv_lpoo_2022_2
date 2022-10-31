@@ -269,6 +269,39 @@ public class PersistenciaJDBC implements InterfacePersistencia {
          
         }else if (o instanceof Fornecedor){
             
+            Fornecedor f = (Fornecedor) o;
+            
+            if(f.getData_cadastro() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_pessoa (tipo, cpf, rg, nome, senha, data_cadastro) "
+                                                               + "values ('F', ?, ?, ?, ?, ?); ");
+                ps.setString(1, f.getCpf());
+                ps.setString(2, f.getRg());
+                ps.setString(3, f.getNome());
+                ps.setString(4, f.getSenha());
+                ps.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                
+                ps.execute();
+                ps.close();
+                
+                ps = this.con.prepareStatement("insert into tb_fornecedor (cpf, ie, cnpj) "
+                                                               + "values (?, ?, ?); ");
+                ps.setString(1, f.getCpf());
+                ps.setString(2, f.getIe());
+                ps.setString(3, f.getCnpj());
+                
+                ps.execute();
+                ps.close();
+                
+                System.out.println("inseriu o fornecedor ...");
+                
+                
+                
+            } else {
+                
+                //implementar a alteracao ...
+            
+            }
             
             
         }else if (o instanceof Medico){
@@ -616,7 +649,9 @@ public class PersistenciaJDBC implements InterfacePersistencia {
              
              //... recuperar as receitas da consulta: id, orientacao e consulta_id
              
-             PreparedStatement ps2 = this.con.prepareStatement("select r.id, r.orientacao, r.consulta_id from tb_receita r where r.consulta_id = ? order by r.id asc");
+             PreparedStatement ps2 = this.con.prepareStatement("select r.id, r.orientacao, r.consulta_id "
+                                                                            + "from tb_receita r "
+                                                            + "where r.consulta_id = ? order by r.id asc");
              ps2.setInt(1, c.getId());
              
              ResultSet rs2 = ps2.executeQuery();
@@ -631,7 +666,9 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                  
                 //... recuperar os produtos da receita: produto_id
                 
-                PreparedStatement ps3 = this.con.prepareStatement("select rp.receita_id, rp.produto_id from tb_receita_produto rp where rp.receita_id = ? order by rp.produto_id asc");
+                PreparedStatement ps3 = this.con.prepareStatement("select rp.receita_id, rp.produto_id "
+                                                                    + "from tb_receita_produto rp "
+                                                                    + "where rp.receita_id = ? order by rp.produto_id asc");
                 ps3.setInt(1, r.getId());
              
                 ResultSet rs3 = ps3.executeQuery();
