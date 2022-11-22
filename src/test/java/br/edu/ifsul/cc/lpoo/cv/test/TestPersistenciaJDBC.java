@@ -24,6 +24,21 @@ import org.junit.Test;
 public class TestPersistenciaJDBC {
     
     @Test
+    public void testPersistenciaFuncionario() throws Exception {
+        
+        //criar um objeto do tipo PersistenciaJDBC.
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            System.out.println("conectou no BD via jpa ...");
+            jdbc.fecharConexao();
+        }else{
+            System.out.println("nao conectou no BD ...");
+                        
+        }
+        
+    }
+    
+    @Test
     public void testPersistenciaConsulta() throws Exception {
         
         //Avaliação 11/10/2022 - Questão 3 - teste circular em tb_consulta, tb_receita e tb_receita_produto

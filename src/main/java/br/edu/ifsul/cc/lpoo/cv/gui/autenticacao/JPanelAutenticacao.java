@@ -102,7 +102,7 @@ public class JPanelAutenticacao extends JPanel implements ActionListener {
 
                 txfCPF.setBorder(new LineBorder(Color.green,1));
 
-                if(new String(psfSenha.getPassword()).trim().length() > 3 ){
+                if(new String(psfSenha.getPassword()).trim().length() >= 3 ){
 
                     psfSenha.setBorder(new LineBorder(Color.green,1));
 

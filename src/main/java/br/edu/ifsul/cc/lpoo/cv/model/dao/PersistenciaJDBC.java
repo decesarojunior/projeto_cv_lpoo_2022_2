@@ -5,6 +5,7 @@ import br.edu.ifsul.cc.lpoo.cv.model.Cliente;
 import br.edu.ifsul.cc.lpoo.cv.model.Consulta;
 import br.edu.ifsul.cc.lpoo.cv.model.Especie;
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
+import br.edu.ifsul.cc.lpoo.cv.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
 import br.edu.ifsul.cc.lpoo.cv.model.Pet;
 import br.edu.ifsul.cc.lpoo.cv.model.Procedimento;
@@ -818,6 +819,30 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         }
          
         return lista;
+    }
+
+    @Override
+    public Funcionario doLogin(String cpf, String senha) throws Exception {        
+        Funcionario funcionario = null;        
+        PreparedStatement ps = 
+            this.con.prepareStatement("select p.cpf, to_char(p.data_cadastro, 'dd/mm/yyyy') as data_cadastro, p.nome, p.rg "
+                                        + " from tb_pessoa p "
+                                        + " where p.cpf = ? and p.senha = ? ");
+                        
+            ps.setString(1, cpf);
+            ps.setString(2, senha);
+            
+            ResultSet rs = ps.executeQuery();//o ponteiro do REsultSet inicialmente está na linha -1
+            
+            if(rs.next()){//se a matriz (ResultSet) tem uma linha
+
+                funcionario = new Funcionario();
+                funcionario.setCpf(rs.getString("cpf"));  
+                //...recupera demais campos do ResultSet
+            }
+            ps.close();
+            
+            return funcionario;         
     }
     
 }

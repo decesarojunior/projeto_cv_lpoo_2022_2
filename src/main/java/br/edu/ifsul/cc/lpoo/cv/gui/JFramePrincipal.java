@@ -2,8 +2,10 @@
 package br.edu.ifsul.cc.lpoo.cv.gui;
 
 import br.edu.ifsul.cc.lpoo.cv.Controle;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -12,6 +14,11 @@ import javax.swing.JFrame;
 public class JFramePrincipal extends JFrame {
     
     private Controle controle;
+    
+    public CardLayout cardLayout;
+    
+    public JPanel painel;//painel.
+    
     
     public JFramePrincipal(Controle controle){
         
@@ -31,5 +38,21 @@ public class JFramePrincipal extends JFrame {
         //defini o comportamento de fechar o processo no fechamento do Jframe
         this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );// finaliza o processo quando o frame é fechado.  
        
+        cardLayout = new CardLayout();//iniciando o gerenciador de layout para esta JFrame
+        painel = new JPanel();//inicializacao
+                
+        painel.setLayout(cardLayout);//definindo o cardLayout para o paineldeFundo
+                
+        this.add(painel);  //adiciona no JFrame o paineldeFundo
+    }
+    
+    public void addTela(JPanel p, String nome){   
+        
+            painel.add(p, nome); //adiciona uma "carta no baralho".
+    }
+
+    public void showTela(String nome){
+        
+            cardLayout.show(painel, nome); //localiza a "carta no baralho" e mostra.
     }
 }
