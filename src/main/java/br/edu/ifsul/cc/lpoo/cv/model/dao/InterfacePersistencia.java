@@ -39,5 +39,6 @@ public interface InterfacePersistencia {
     public List<Cliente> listClientes() throws Exception;
     
     //public Funcionario doLogin(String cpf, String senha) throws Exception;
+    //select p.cpf, to_char(p.data_cadastro, 'dd/mm/yyyy') as data_cadastro, p.nome, p.rg, f.cargo, f.numero_ctps from tb_pessoa p, tb_funcionario f where p.cpf=f.cpf;
     //public List<Funcionario> listFuncionarios() throws Exception;
 }
