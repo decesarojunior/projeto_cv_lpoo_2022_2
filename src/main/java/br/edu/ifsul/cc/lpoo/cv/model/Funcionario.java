@@ -64,6 +64,20 @@ public class Funcionario extends Pessoa{
     public void setNumero_pis(String numero_pis) {
         this.numero_pis = numero_pis;
     }
+
+    /**
+     * @return the cargo
+     */
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    /**
+     * @param cargo the cargo to set
+     */
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
+    }
     
     
     

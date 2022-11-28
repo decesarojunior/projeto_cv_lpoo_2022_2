@@ -1,10 +1,12 @@
 
 package br.edu.ifsul.cc.lpoo.cv.test;
 
+import br.edu.ifsul.cc.lpoo.cv.model.Cargo;
 import br.edu.ifsul.cc.lpoo.cv.model.Cliente;
 import br.edu.ifsul.cc.lpoo.cv.model.Consulta;
 import br.edu.ifsul.cc.lpoo.cv.model.Especie;
 import br.edu.ifsul.cc.lpoo.cv.model.Fornecedor;
+import br.edu.ifsul.cc.lpoo.cv.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
 import br.edu.ifsul.cc.lpoo.cv.model.Pet;
 import br.edu.ifsul.cc.lpoo.cv.model.Produto;
@@ -24,7 +26,7 @@ import org.junit.Test;
 public class TestPersistenciaJDBC {
     
     @Test
-    public void testPersistenciaFuncionario() throws Exception {
+    public void testPersistenciaConexao() throws Exception {
         
         //criar um objeto do tipo PersistenciaJDBC.
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
@@ -38,7 +40,7 @@ public class TestPersistenciaJDBC {
         
     }
     
-    @Test
+    //@Test
     public void testPersistenciaConsulta() throws Exception {
         
         //Avaliação 11/10/2022 - Questão 3 - teste circular em tb_consulta, tb_receita e tb_receita_produto
@@ -125,20 +127,7 @@ public class TestPersistenciaJDBC {
         
         //----------------------------------------------------------------------
     }
-    
-    //@Test
-    public void testConexaoJPA() throws Exception {
-        //criar um objeto do tipo PersistenciaJDBC.
-        PersistenciaJDBC jdbc = new PersistenciaJDBC();
-        if(jdbc.conexaoAberta()){
-            System.out.println("conectou no BD via jpa ...");
-            jdbc.fecharConexao();
-        }else{
-            System.out.println("nao conectou no BD ...");
-                        
-        }
-    }
-    
+        
     //@Test
     public void testListProduto() throws Exception {
         //criar um objeto do tipo PersistenciaJPA.
@@ -448,4 +437,48 @@ public class TestPersistenciaJDBC {
         return null;
     }
     
+    
+    @Test
+    public void testPersistenciaFuncionario() throws Exception {
+        
+        //criar um objeto do tipo PersistenciaJDBC.
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            System.out.println("conectou no BD via jpa ...");
+            
+            List<Funcionario> listF = jdbc.listFuncionarios();
+            if(listF.isEmpty()){
+                
+                Funcionario f = new Funcionario();
+                f.setCpf("00011357788");
+                f.setSenha("1234");
+                f.setRg("123456789");
+                f.setNome("teste persistencia funcionario");
+                f.setNumero_pis("123");
+                f.setNumero_ctps("456");
+                f.setCargo(Cargo.ATENDENTE);
+                
+                jdbc.persist(f);
+                
+                System.out.println("Cadastrou o Funcionario "+f.getCpf());
+                
+            }else{
+                
+                for(Funcionario f : listF){
+                    System.out.println("Funcionario cpf: "+f.getCpf());
+                    f.setCargo(Cargo.ADESTRADOR);
+                    jdbc.persist(f);
+                    System.out.println("Alterou o funcionario");
+                    jdbc.remover(f);
+                    System.out.println("Removeu o funcionario");
+                }
+                
+            }                                    
+            jdbc.fecharConexao();
+        }else{
+            System.out.println("nao conectou no BD ...");
+                        
+        }
+        
+    }
 }

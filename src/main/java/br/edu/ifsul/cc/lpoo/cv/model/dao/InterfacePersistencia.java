@@ -42,5 +42,5 @@ public interface InterfacePersistencia {
     // select p.cpf, to_char(p.data_cadastro, 'dd/mm/yyyy') as data_cadastro, p.nome, p.rg, f.cargo, f.numero_ctps from tb_pessoa p, tb_funcionario f where p.cpf=f.cpf;
     // select p.cpf, to_char(p.data_cadastro, 'dd/mm/yyyy') as data_cadastro, p.nome, p.rg from tb_pessoa p where p.cpf = ? and p.senha = ? ;
 
-    //public List<Funcionario> listFuncionarios() throws Exception;
+    public List<Funcionario> listFuncionarios() throws Exception;
 }

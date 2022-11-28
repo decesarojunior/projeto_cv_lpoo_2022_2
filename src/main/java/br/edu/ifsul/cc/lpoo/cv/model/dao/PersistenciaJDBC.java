@@ -1,6 +1,7 @@
 
 package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
+import br.edu.ifsul.cc.lpoo.cv.model.Cargo;
 import br.edu.ifsul.cc.lpoo.cv.model.Cliente;
 import br.edu.ifsul.cc.lpoo.cv.model.Consulta;
 import br.edu.ifsul.cc.lpoo.cv.model.Especie;
@@ -377,6 +378,62 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             
             }
             
+        }else if (o instanceof Funcionario){
+            
+            Funcionario f = (Funcionario) o;
+            
+            if(f.getData_cadastro() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_pessoa (tipo, cpf, rg, nome, senha, data_cadastro) "
+                                                               + "values ('U', ?, ?, ?, ?, ?); ");
+                ps.setString(1, f.getCpf());
+                ps.setString(2, f.getRg());
+                ps.setString(3, f.getNome());
+                ps.setString(4, f.getSenha());
+                ps.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+                
+                ps.execute();
+                ps.close();
+                
+                ps = this.con.prepareStatement("insert into tb_funcionario (cpf, numero_ctps, numero_pis, cargo) "
+                                                               + "values (?, ?, ?, ?); ");
+                ps.setString(1, f.getCpf());
+                ps.setString(2, f.getNumero_ctps());
+                ps.setString(3, f.getNumero_pis());
+                ps.setString(4, f.getCargo().toString());
+                
+                ps.execute();
+                ps.close();
+                
+                System.out.println("inseriu o Funcionario ...");
+                
+                
+            }else{
+                
+                PreparedStatement ps = this.con.prepareStatement("update tb_pessoa set rg = ?, nome = ?, senha = ? where cpf = ? ");
+                ps.setString(1, f.getRg());
+                ps.setString(2, f.getNome());
+                ps.setString(3, f.getSenha());
+                ps.setString(4, f.getCpf());                
+                
+                ps.execute();
+                ps.close();
+                
+                ps = this.con.prepareStatement("update tb_funcionario set numero_ctps = ?, numero_pis = ?, cargo = ? where cpf = ? ");
+                ps.setString(1, f.getNumero_ctps());
+                ps.setString(2, f.getNumero_pis());
+                ps.setString(3, f.getCargo().toString());
+                ps.setString(4, f.getCpf());
+                
+                ps.execute();
+                ps.close();
+                
+                System.out.println("alterou o Funcionario ...");
+                
+                
+            }
+            
+            
         }else if (o instanceof Procedimento){
             
         }else if (o instanceof Consulta){
@@ -458,6 +515,22 @@ public class PersistenciaJDBC implements InterfacePersistencia {
            
        }else if(o instanceof Fornecedor){
            
+           
+       }else if(o instanceof Funcionario){
+           
+           Funcionario f = (Funcionario) o;
+           
+           PreparedStatement ps = this.con.prepareStatement("delete from tb_funcionario where cpf = ? ");
+           ps.setString(1, f.getCpf());
+           
+           ps.execute();
+           ps.close();
+           
+           ps = this.con.prepareStatement("delete from tb_pessoa where cpf = ? ");
+           ps.setString(1, f.getCpf());
+           
+           ps.execute();
+           ps.close();
            
        }else if(o instanceof Receita){
            
@@ -843,6 +916,40 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             ps.close();
             
             return funcionario;         
+    }
+
+    @Override
+    public List<Funcionario> listFuncionarios() throws Exception {
+        
+        List<Funcionario> lista;
+        
+        PreparedStatement ps = this.con.prepareStatement(" select p.cpf, p.rg, p.nome, p.senha, f.cargo, f.numero_ctps, f.numero_pis, p.data_cadastro "
+                                                        + " from tb_pessoa p, tb_funcionario f where p.cpf=f.cpf order by p.data_cadastro asc");
+         
+        ResultSet rs = ps.executeQuery();
+         
+        lista = new ArrayList();
+         
+        while(rs.next()){
+             
+             Funcionario f = new Funcionario();
+             f.setCpf(rs.getString("cpf"));
+             f.setRg(rs.getString("rg"));
+             f.setNome(rs.getString("nome"));
+             f.setSenha(rs.getString("senha"));
+             f.setCargo(Cargo.getCargo(rs.getString("cargo")));
+             f.setNumero_ctps(rs.getString("numero_ctps"));
+             f.setNumero_pis(rs.getString("numero_pis"));            
+                Calendar c = Calendar.getInstance();                
+                c.setTimeInMillis(rs.getDate("data_cadastro").getTime());                
+             f.setData_cadastro(c);
+             
+             lista.add(f);
+             
+        }
+         
+        return lista;
+        
     }
     
 }
