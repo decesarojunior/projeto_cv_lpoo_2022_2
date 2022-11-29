@@ -5,6 +5,7 @@ import br.edu.ifsul.cc.lpoo.cv.gui.JFramePrincipal;
 import br.edu.ifsul.cc.lpoo.cv.gui.JMenuBarHome;
 import br.edu.ifsul.cc.lpoo.cv.gui.JPanelHome;
 import br.edu.ifsul.cc.lpoo.cv.gui.autenticacao.JPanelAutenticacao;
+import br.edu.ifsul.cc.lpoo.cv.gui.funcionario.JPanelAFuncionario;
 import br.edu.ifsul.cc.lpoo.cv.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.cv.model.dao.PersistenciaJDBC;
 import javax.swing.JOptionPane;
@@ -19,6 +20,8 @@ public class Controle {
     private JFramePrincipal frame; // frame principal da minha aplicação gráfica
 
     private JPanelAutenticacao telaAutenticacao; //tela de autentiacao.
+    
+    private JPanelAFuncionario telaFuncionario;
     
     private JMenuBarHome menuBar;
     
@@ -48,9 +51,13 @@ public class Controle {
         
         telaHome = new JPanelHome(this);
         
+        telaFuncionario = new JPanelAFuncionario(this);
+        
         frame.addTela(telaAutenticacao, "tela_autenticacao"); //adiciona
         
         frame.addTela(telaHome, "tela_home"); //adiciona
+        
+        frame.addTela(telaFuncionario, "tela_funcionario");
          
         
         frame.showTela("tela_autenticacao");   //mostra
@@ -84,5 +91,18 @@ public class Controle {
 
             JOptionPane.showMessageDialog(telaAutenticacao, "Erro ao executar a autenticação no Banco de Dados!", "Autenticação", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    public void showTela(String nomeTela){
+         
+        //para cada nova tela de CRUD adicionar um elseif
+        
+         if(nomeTela.equals("tela_funcionario")){
+             
+            telaFuncionario.showTela("tela_funcionario_listagem");
+            frame.showTela(nomeTela);
+            
+         }
+         
     }
 }

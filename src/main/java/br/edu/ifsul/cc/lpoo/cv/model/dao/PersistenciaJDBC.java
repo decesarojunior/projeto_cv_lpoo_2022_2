@@ -385,14 +385,20 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             if(f.getData_cadastro() == null){
                 
                 PreparedStatement ps = this.con.prepareStatement("insert into tb_pessoa (tipo, cpf, rg, nome, senha, data_cadastro) "
-                                                               + "values ('U', ?, ?, ?, ?, ?); ");
+                                                               + "values ('U', ?, ?, ?, ?, ?) returning data_cadastro; ");
                 ps.setString(1, f.getCpf());
                 ps.setString(2, f.getRg());
                 ps.setString(3, f.getNome());
                 ps.setString(4, f.getSenha());
                 ps.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
                 
-                ps.execute();
+                ResultSet rs  = ps.executeQuery();
+                if(rs.next()){
+                    Calendar c = Calendar.getInstance();
+                    c.setTimeInMillis(rs.getDate("data_cadastro").getTime());
+                    f.setData_cadastro(c);
+                }
+                rs.close();
                 ps.close();
                 
                 ps = this.con.prepareStatement("insert into tb_funcionario (cpf, numero_ctps, numero_pis, cargo) "

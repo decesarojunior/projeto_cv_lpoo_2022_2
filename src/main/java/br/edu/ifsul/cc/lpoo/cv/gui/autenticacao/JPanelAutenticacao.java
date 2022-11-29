@@ -118,7 +118,7 @@ public class JPanelAutenticacao extends JPanel implements ActionListener {
 
             }else{
 
-                JOptionPane.showMessageDialog(this, "Informe Nickname com 4 ou mais dígitos", "Autenticação", JOptionPane.ERROR_MESSAGE);                    
+                JOptionPane.showMessageDialog(this, "Informe CPf com 11 dígitos", "Autenticação", JOptionPane.ERROR_MESSAGE);                    
                 txfCPF.setBorder(new LineBorder(Color.red,1));
                 txfCPF.requestFocus();
             }
