@@ -25,7 +25,7 @@ import org.junit.Test;
  */
 public class TestPersistenciaJDBC {
     
-    @Test
+    //@Test
     public void testPersistenciaConexao() throws Exception {
         
         //criar um objeto do tipo PersistenciaJDBC.
@@ -438,7 +438,7 @@ public class TestPersistenciaJDBC {
     }
     
     
-    @Test
+    //@Test
     public void testPersistenciaFuncionario() throws Exception {
         
         //criar um objeto do tipo PersistenciaJDBC.
@@ -450,7 +450,7 @@ public class TestPersistenciaJDBC {
             if(listF.isEmpty()){
                 
                 Funcionario f = new Funcionario();
-                f.setCpf("00011357788");
+                f.setCpf("0011357788");
                 f.setSenha("1234");
                 f.setRg("123456789");
                 f.setNome("teste persistencia funcionario");
@@ -471,6 +471,76 @@ public class TestPersistenciaJDBC {
                     System.out.println("Alterou o funcionario");
                     jdbc.remover(f);
                     System.out.println("Removeu o funcionario");
+                }
+                
+            }                                    
+            jdbc.fecharConexao();
+        }else{
+            System.out.println("nao conectou no BD ...");
+                        
+        }
+        
+    }
+    
+    @Test
+    public void testPersistenciaCliente() throws Exception {
+        
+        //criar um objeto do tipo PersistenciaJDBC.
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            System.out.println("conectou no BD via jpa ...");
+            
+            List<Cliente> listC = jdbc.listClientes();
+            if(listC.isEmpty()){
+                
+                Cliente c = new Cliente();
+                c.setCpf("00011257788");
+                c.setSenha("1234");
+                c.setRg("123456789");
+                c.setNome("Fulano de Tal");
+                
+                jdbc.persist(c);
+                
+                System.out.println("Cadastrou o Cliente "+c.getNome());
+                
+                c = new Cliente();
+                c.setCpf("99011357788");
+                c.setSenha("4455");
+                c.setRg("123456700");
+                c.setNome("Ciclano de Marombas");
+                
+                jdbc.persist(c);
+                
+                System.out.println("Cadastrou o Cliente "+c.getNome());
+                
+                c = new Cliente();
+                c.setCpf("55011357788");
+                c.setSenha("8455");
+                c.setRg("123456755");
+                c.setNome("Bruno Mezenga");
+                
+                jdbc.persist(c);
+                
+                System.out.println("Cadastrou o Cliente "+c.getNome());
+                
+                c = new Cliente();
+                c.setCpf("11111357788");
+                c.setSenha("8455");
+                c.setRg("123411755");
+                c.setNome("Francisco Berdinazi");
+                
+                jdbc.persist(c);
+                
+                System.out.println("Cadastrou o Cliente "+c.getNome());
+                
+            }else{
+                
+                for(Cliente c : listC){
+                    System.out.println("Cliente cpf        : "+c.getCpf());
+                    System.out.println("Cliente nome       : "+c.getNome());
+                     System.out.println("Cliente dtCadastro: "+c.getData_cadastro());
+                    //jdbc.remover(c);
+                    
                 }
                 
             }                                    

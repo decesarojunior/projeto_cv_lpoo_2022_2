@@ -5,6 +5,7 @@ import br.edu.ifsul.cc.lpoo.cv.gui.JFramePrincipal;
 import br.edu.ifsul.cc.lpoo.cv.gui.JMenuBarHome;
 import br.edu.ifsul.cc.lpoo.cv.gui.JPanelHome;
 import br.edu.ifsul.cc.lpoo.cv.gui.autenticacao.JPanelAutenticacao;
+import br.edu.ifsul.cc.lpoo.cv.gui.cliente.JPanelClienteListagem;
 import br.edu.ifsul.cc.lpoo.cv.gui.funcionario.JPanelAFuncionario;
 import br.edu.ifsul.cc.lpoo.cv.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.cv.model.dao.PersistenciaJDBC;
@@ -58,10 +59,8 @@ public class Controle {
         frame.addTela(telaHome, "tela_home"); //adiciona
         
         frame.addTela(telaFuncionario, "tela_funcionario");
-         
         
         frame.showTela("tela_autenticacao");   //mostra
-         
         
         frame.setVisible(true); // torna visível o jframe
     }
@@ -100,9 +99,11 @@ public class Controle {
          if(nomeTela.equals("tela_funcionario")){
              
             telaFuncionario.showTela("tela_funcionario_listagem");
-            frame.showTela(nomeTela);
+            
             
          }
+         
+         frame.showTela(nomeTela);
          
     }
 }

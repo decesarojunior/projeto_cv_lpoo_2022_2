@@ -356,7 +356,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 ps.setString(3, c.getNome());
                 ps.setString(4, c.getSenha());
                 ps.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-                
+                System.out.println("RG: "+c.getRg());
                 ps.execute();
                 ps.close();
                 
@@ -564,6 +564,21 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             ps3.execute();
            //-------------------------------------------------------------------
            
+       }else if (o instanceof Cliente){
+           
+           Cliente c = (Cliente) o;
+           
+           PreparedStatement ps = this.con.prepareStatement("delete from tb_cliente where cpf = ? ");
+           ps.setString(1, c.getCpf());
+           
+           ps.execute();
+           ps.close();
+           
+           ps = this.con.prepareStatement("delete from tb_pessoa where cpf = ? ");
+           ps.setString(1, c.getCpf());
+           
+           ps.execute();
+           ps.close();
        }
     }
 
@@ -880,7 +895,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         
         List<Cliente> lista;
         
-        PreparedStatement ps = this.con.prepareStatement(" select p.cpf, p.nome "
+        PreparedStatement ps = this.con.prepareStatement(" select p.cpf, p.nome, p.rg, p.senha, p.data_cadastro "
                                                         + " from tb_pessoa p, tb_cliente c where p.cpf=c.cpf order by p.cpf asc");
          
         ResultSet rs = ps.executeQuery();
@@ -892,7 +907,11 @@ public class PersistenciaJDBC implements InterfacePersistencia {
              Cliente c = new Cliente();
              c.setCpf(rs.getString("cpf"));
              c.setNome(rs.getString("nome"));
-             
+             c.setRg(rs.getString("rg"));
+             c.setSenha(rs.getString("senha"));
+                Calendar cld = Calendar.getInstance();
+                cld.setTimeInMillis(rs.getDate("data_cadastro").getTime());
+             c.setData_cadastro(cld);
              lista.add(c);
              
         }

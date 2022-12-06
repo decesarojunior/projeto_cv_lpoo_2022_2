@@ -22,7 +22,8 @@ public class JMenuBarHome extends JMenuBar implements ActionListener {
 
     private JMenu menuCadastro;
     private JMenuItem menuItemFuncionario;    
-    private JMenuItem menuItemFuncionarioDesigner;    
+    private JMenuItem menuItemFuncionarioDesigner;   
+    //private JMenuItem menuItemCliente;
 
     private Controle controle;
     
@@ -73,11 +74,17 @@ public class JMenuBarHome extends JMenuBar implements ActionListener {
         menuItemFuncionarioDesigner.setToolTipText("Funcionario (Desinger)"); //acessibilidade
         menuItemFuncionarioDesigner.setFocusable(true); //acessibilidade
         
-        
+                   
         menuItemFuncionarioDesigner.addActionListener(this);
         menuItemFuncionarioDesigner.setActionCommand("menu_funcionario_designer");
-        menuCadastro.add(menuItemFuncionarioDesigner);  
-                        
+        menuCadastro.add(menuItemFuncionarioDesigner); 
+        
+        /*
+        menuItemCliente = new JMenuItem("Cliente");
+        menuItemCliente.setActionCommand("menu_cliente");
+        menuItemCliente.addActionListener(this);
+        menuCadastro.add(menuItemCliente); 
+        */              
 
         this.add(menuArquivo);
         this.add(menuCadastro);
@@ -108,7 +115,10 @@ public class JMenuBarHome extends JMenuBar implements ActionListener {
         }else if(e.getActionCommand().equals(menuItemFuncionarioDesigner.getActionCommand())){
             
                         //controle.showTela("tela_jogador_designer");
-        }
+        }/*else if(e.getActionCommand().equals(menuItemCliente.getActionCommand())){
+            
+                 controle.showTela("tela_cliente");  
+        }*/
         
         
     }
