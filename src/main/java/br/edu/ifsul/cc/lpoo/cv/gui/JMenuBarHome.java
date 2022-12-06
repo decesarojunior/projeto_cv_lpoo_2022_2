@@ -115,10 +115,7 @@ public class JMenuBarHome extends JMenuBar implements ActionListener {
         }else if(e.getActionCommand().equals(menuItemFuncionarioDesigner.getActionCommand())){
             
                         //controle.showTela("tela_jogador_designer");
-        }/*else if(e.getActionCommand().equals(menuItemCliente.getActionCommand())){
-            
-                 controle.showTela("tela_cliente");  
-        }*/
+        }
         
         
     }
