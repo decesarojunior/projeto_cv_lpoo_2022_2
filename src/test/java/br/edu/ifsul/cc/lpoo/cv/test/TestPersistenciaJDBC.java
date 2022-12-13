@@ -25,6 +25,13 @@ import org.junit.Test;
  */
 public class TestPersistenciaJDBC {
     
+    
+    //@Test
+    public void testPersistenciaProcedimento() throws Exception {
+        
+        //Reavaliação da Primeira Etapa
+    }
+    
     //@Test
     public void testPersistenciaConexao() throws Exception {
         
@@ -482,7 +489,7 @@ public class TestPersistenciaJDBC {
         
     }
     
-    @Test
+    //@Test
     public void testPersistenciaCliente() throws Exception {
         
         //criar um objeto do tipo PersistenciaJDBC.

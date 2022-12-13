@@ -579,6 +579,21 @@ public class PersistenciaJDBC implements InterfacePersistencia {
            
            ps.execute();
            ps.close();
+           
+       }else if (o instanceof Procedimento){
+           
+           Procedimento p = (Procedimento) o;
+           
+            //remove as linha(s) na tabela associativa.
+            PreparedStatement ps2 = this.con.prepareStatement("delete from tb_procedimento_produto where procedimento_id = ?");
+            ps2.setInt(1, p.getId());
+            ps2.execute();
+                    
+            //remove as linha(s) na tabela.
+            PreparedStatement ps3 = this.con.prepareStatement("delete from tb_procedimento where id = ?");
+            ps3.setInt(1, p.getId());
+            ps3.execute();
+           
        }
     }
 
