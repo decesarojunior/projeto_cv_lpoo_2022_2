@@ -620,7 +620,13 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 p.setTipo(TipoProduto.CONSULTA);
              }else if(rs.getString("tipo").equals(TipoProduto.ATENDIMENTO_AMBULATORIAL.name())){
                 p.setTipo(TipoProduto.ATENDIMENTO_AMBULATORIAL);
+             }else if(rs.getString("tipo").equals(TipoProduto.SESSAO_ADESTRAMENTO.name())){
+                p.setTipo(TipoProduto.SESSAO_ADESTRAMENTO); 
+             }else if(rs.getString("tipo").equals(TipoProduto.SESSAO_FISIOTERAPIA.name())){
+                 p.setTipo(TipoProduto.SESSAO_FISIOTERAPIA);
              }
+             //implementar os demais testas para os outros enuns de TipoProduto
+             
              p.setValor(rs.getFloat("valor"));
                 Fornecedor fc = new Fornecedor();
                 fc.setCpf(rs.getString("fornecedor_cpf"));
